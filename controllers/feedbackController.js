@@ -27,7 +27,11 @@ class FeedbackController {
   }
   async addFeedback(req, res) {
     try {
-      const feedback = await FeedbackService.addFeedback(req.body);
+      const feedbackData = {
+        ...req.body,
+        UserId: req.user.id, // On force l'association avec l'utilisateur connecté
+      };
+      const feedback = await FeedbackService.addFeedback(feedbackData);
       res.status(201).json(feedback);
     } catch (error) {
       console.log(error);
@@ -52,9 +56,17 @@ class FeedbackController {
   }
   async deleteFeedbackById(req, res) {
     try {
-      const feedback = await FeedbackService.deleteFeedbackById(req.params.id);
+      const feedback = await FeedbackService.getFeedbackById(req.params.id);
       if (!feedback)
         return res.status(404).json({ error: "Feedback non trouvé" });
+      // Vérification droits : admin ou propriétaire
+      if (
+        req.user.role !== "admin" &&
+        req.user.id !== feedback.UserId
+      ) {
+        return res.status(403).json({ error: "Accès interdit" });
+      }
+      await FeedbackService.deleteFeedbackById(req.params.id);
       res.json({ message: "Feedback supprimé avec succès" });
     } catch (error) {
       console.log(error);
