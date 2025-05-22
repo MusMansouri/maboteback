@@ -1,15 +1,22 @@
 // models/Conseil.js
-const { DataTypes } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
-const Conseil = sequelize.define("Conseil", {
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  img: { type: DataTypes.STRING, allowNull: true }, // image principale
-  name: { type: DataTypes.STRING, allowNull: false },
-  role: { type: DataTypes.STRING, allowNull: false },
-  description: { type: DataTypes.TEXT, allowNull: false },
-  photo: { type: DataTypes.STRING, allowNull: true }, // icône ou image secondaire
-  type: { type: DataTypes.STRING, allowNull: true },
-});
+class Conseil extends Model {}
+
+Conseil.init(
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    title: { type: DataTypes.STRING, allowNull: false },
+    content: { type: DataTypes.TEXT, allowNull: false },
+    category: { type: DataTypes.STRING, allowNull: true },
+  },
+  {
+    sequelize,
+    modelName: "Conseil",
+    tableName: "conseils",
+    timestamps: true,
+  }
+);
 
 module.exports = Conseil;

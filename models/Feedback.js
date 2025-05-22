@@ -1,20 +1,22 @@
 // models/Feedback.js
-const { DataTypes } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const User = require("./User");
 
-const Feedback = sequelize.define("Feedback", {
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  message: { type: DataTypes.TEXT, allowNull: false },
-  photo: { type: DataTypes.STRING, allowNull: true }, // URL ou base64
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
+class Feedback extends Model {}
+
+Feedback.init(
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    comment: { type: DataTypes.TEXT, allowNull: true },
+    photo: { type: DataTypes.STRING, allowNull: true },
+    UserId: { type: DataTypes.INTEGER, allowNull: false },
   },
-});
-
-User.hasMany(Feedback);
-Feedback.belongsTo(User);
+  {
+    sequelize,
+    modelName: "Feedback",
+    tableName: "feedbacks",
+    timestamps: true,
+  }
+);
 
 module.exports = Feedback;

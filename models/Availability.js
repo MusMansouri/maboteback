@@ -1,12 +1,23 @@
 // models/Availability.js
-const { DataTypes } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
-const Availability = sequelize.define("Availability", {
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  date: { type: DataTypes.DATEONLY, allowNull: false },
-  startTime: { type: DataTypes.STRING, allowNull: false }, // format HH:mm
-  endTime: { type: DataTypes.STRING, allowNull: false }, // format HH:mm
-});
+class Availability extends Model {}
+
+Availability.init(
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    date: { type: DataTypes.DATEONLY, allowNull: false },
+    startTime: { type: DataTypes.TIME, allowNull: false },
+    endTime: { type: DataTypes.TIME, allowNull: false },
+    isBooked: { type: DataTypes.BOOLEAN, defaultValue: false },
+  },
+  {
+    sequelize,
+    modelName: "Availability",
+    tableName: "availabilities",
+    timestamps: true,
+  }
+);
 
 module.exports = Availability;
